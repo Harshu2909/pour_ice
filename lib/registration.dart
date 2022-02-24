@@ -17,6 +17,9 @@ class Reg extends StatefulWidget {
 }
 
 class _RegState extends State<Reg> {
+  bool isHiddenpwd = true;
+  bool isHiddenpwdd = true;
+
   final _auth = FirebaseAuth.instance;
 
   //formkey
@@ -31,7 +34,6 @@ class _RegState extends State<Reg> {
 
   final countryEditingController = TextEditingController();
   final dobEditingController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -119,9 +121,7 @@ class _RegState extends State<Reg> {
       ),
     );
 
-
     // date of birth field
-  
 
     //email field
     final emailFiel = TextFormField(
@@ -155,7 +155,7 @@ class _RegState extends State<Reg> {
     final passwordField = TextFormField(
         autofocus: false,
         controller: passwordEditingController,
-        obscureText: true,
+        obscureText: isHiddenpwd,
         //validator
         // validator: (value) {
         //   RegExp regex = RegExp(r'^.{6,}$');
@@ -175,6 +175,10 @@ class _RegState extends State<Reg> {
           hintText: "Enter Password",
           hintStyle: TextStyle(color: HexColor("98B742"), fontSize: 12),
           prefixIcon: Icon(Icons.lock_outline),
+          suffixIcon: InkWell(
+            onTap: _togglepwd,
+            child: Icon(Icons.visibility_off),
+          ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ));
 
@@ -182,7 +186,7 @@ class _RegState extends State<Reg> {
     final confirmpasswordField = TextFormField(
         autofocus: false,
         controller: confirmPasswordEditingController,
-        obscureText: true,
+        obscureText: isHiddenpwdd,
         //validator
         // validator: (value) {
         //   if (confirmPasswordEditingController.text.length !=
@@ -199,6 +203,10 @@ class _RegState extends State<Reg> {
           hintText: "Confirm Password",
           hintStyle: TextStyle(color: HexColor("98B742"), fontSize: 12),
           prefixIcon: Icon(Icons.vpn_key),
+          suffixIcon: InkWell(
+            onTap: _togglepwdd,
+            child: Icon(Icons.visibility_off),
+          ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ));
 
@@ -261,39 +269,27 @@ class _RegState extends State<Reg> {
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      height: 45,
-                      child: firstNameField),
+                    Container(height: 45, child: firstNameField),
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      height: 45,
-                      child: secondNameField),
+                    Container(height: 45, child: secondNameField),
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      height: 45,
-                      child: countryField),
+                    Container(height: 45, child: countryField),
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      height: 45,
-                      child: emailFiel),
+                    Container(height: 45, child: emailFiel),
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      height: 45,
-                      child: passwordField),
+                    Container(height: 45, child: passwordField),
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      height: 45,
-                      child: confirmpasswordField),
+                    Container(height: 45, child: confirmpasswordField),
                     SizedBox(
                       height: 10,
                     ),
@@ -418,10 +414,10 @@ class _RegState extends State<Reg> {
                           child: Text(
                             "Login Now",
                             style: TextStyle(
-                                color: HexColor("47532F"),
-                                fontWeight: FontWeight.bold,
-                                // decoration: TextDecoration.underline
-                                ),
+                              color: HexColor("47532F"),
+                              fontWeight: FontWeight.bold,
+                              // decoration: TextDecoration.underline
+                            ),
                           ),
                         )
                       ],
@@ -482,5 +478,17 @@ class _RegState extends State<Reg> {
 
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (context) => HomeFeed()), (route) => false);
+  }
+
+  void _togglepwd() {
+    setState(() {
+      isHiddenpwd = !isHiddenpwd;
+    });
+  }
+
+    void _togglepwdd() {
+    setState(() {
+      isHiddenpwdd = !isHiddenpwdd;
+    });
   }
 }

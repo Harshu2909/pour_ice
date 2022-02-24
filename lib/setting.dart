@@ -6,6 +6,7 @@ import 'package:pour_ice/home.dart';
 import 'package:pour_ice/homefeed.dart';
 import 'package:pour_ice/login.dart';
 import 'package:pour_ice/models/user_model.dart';
+import 'package:pour_ice/post.dart';
 import 'package:pour_ice/profile.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:pour_ice/setting.dart';
@@ -170,7 +171,9 @@ class _HomeFeedState extends State<Settings> {
                 leading: IconButton(
                     color: HexColor("47532F"),
                     iconSize: 30,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Post()));
+                    },
                     icon: Icon(Icons.group_add)),
                 actions: [
                   IconButton(

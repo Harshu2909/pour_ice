@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
             children: [
               GestureDetector(
                 onTap: (() {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CardScreen()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CardScreen()));  
                 }),
                 child: Container(
                   height: 168,
