@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "43181479999",
+    "project_id": "pourice-1e55a",
+    "storage_bucket": "pourice-1e55a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43181479999:android:db85cfcd90a152e9a6008a",
+        "android_client_info": {
+          "package_name": "com.example.pour_ice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "43181479999-rddilefftif6h8fqhfb44i7d66e1rce4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pour_ice",
+            "certificate_hash": "7dd03660d57fa9b0a2b513709d83d6527e864543"
+          }
+        },
+        {
+          "client_id": "43181479999-chuqc6a4tlvtvq17a2fspablk9kai972.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN1gQh5bHzCzl13P7AeJpZMiPzVL_P4iw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "43181479999-chuqc6a4tlvtvq17a2fspablk9kai972.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
