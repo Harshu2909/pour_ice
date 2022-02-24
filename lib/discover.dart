@@ -27,7 +27,11 @@ class _HomeState extends State<Discover> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                
                 SearchField(
+                searchInputDecoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search)
+                ),  
                   suggestions: [
                     'United States',
                     'America',
