@@ -95,6 +95,7 @@ class _LoginState extends State<Login> {
       ),
     );
 
+    
 
     //login button
     final loginButton = Material(
@@ -105,6 +106,7 @@ class _LoginState extends State<Login> {
         elevation: 7,
         color: HexColor("47532F"),
         onPressed: () {
+          
          signIn(emailController.text, passwordController.text);
         },
         child: Text(
@@ -118,6 +120,7 @@ class _LoginState extends State<Login> {
     );
 
     return Scaffold(
+
       // backgroundColor: HexColor("E5E5E5"),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -136,15 +139,11 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
                       children: [
-                        Container(
-                          height: 45,
-                          child: emailField),
+                        emailField,
                         SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          height: 45,
-                          child: passwordField),
+                        passwordField,
                         // TextFormField(
                         //   decoration: InputDecoration(
                         //       hintText: "Email@example.com",
@@ -184,7 +183,7 @@ class _LoginState extends State<Login> {
                         //   ),
                         // ),
                         SizedBox(
-                          height: 50,
+                          height: 30,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

@@ -269,27 +269,27 @@ class _RegState extends State<Reg> {
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(height: 45, child: firstNameField),
+                    firstNameField,
                     SizedBox(
                       height: 10,
                     ),
-                    Container(height: 45, child: secondNameField),
+                    secondNameField,
                     SizedBox(
                       height: 10,
                     ),
-                    Container(height: 45, child: countryField),
+                    countryField,
                     SizedBox(
                       height: 10,
                     ),
-                    Container(height: 45, child: emailFiel),
+                    emailFiel,
                     SizedBox(
                       height: 10,
                     ),
-                    Container(height: 45, child: passwordField),
+                    passwordField,
                     SizedBox(
                       height: 10,
                     ),
-                    Container(height: 45, child: confirmpasswordField),
+                    confirmpasswordField,
                     SizedBox(
                       height: 10,
                     ),
@@ -400,7 +400,7 @@ class _RegState extends State<Reg> {
                     //     ),
                     //   ),
                     // ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 7),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -421,7 +421,8 @@ class _RegState extends State<Reg> {
                           ),
                         )
                       ],
-                    )
+                    ),
+                    SizedBox(height: 7)
                   ],
                 )),
               )
