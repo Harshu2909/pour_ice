@@ -95,7 +95,7 @@ class _CardScreenState extends State<CardScreen> {
                       size: 25,
                     )
                   ],
-                ),
+                ), 
                 SizedBox(
                   height: 10,
                 ),

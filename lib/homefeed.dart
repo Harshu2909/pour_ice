@@ -34,8 +34,45 @@ class _HomeFeedState extends State<HomeFeed>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) 
+  {
+    Future<bool> onWillPop() async {
+  final shouldPop = await showDialog(
+    context: context,
+    builder: (context) =>
+        AlertDialog(
+          title: Text(
+            'Do you want to Exit?',
+            style: TextStyle(
+                fontFamily: 'Gilmer Bold', color: Color(0xFF3F4553)),
+          ),
+          //content: Text('Do you want to Exit'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(
+                'No',
+                style: TextStyle(fontFamily:"Gilmer Medium",fontSize: 15, color: Color(0xFF3F4553)),
+              ),
+            ),
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(
+                'Yes',
+                style: TextStyle(fontFamily:"Gilmer Medium",fontSize: 15, color: Color(0xFF3F4553)),
+              ),
+            ),
+          ],
+        ),
+  );
+  return shouldPop??false;
+}
+
+
+
+return WillPopScope(
+  onWillPop: onWillPop,
+    child: Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(120),
         child: SafeArea(
@@ -128,6 +165,6 @@ class _HomeFeedState extends State<HomeFeed>
         controller: _controller,
         children: [Profile(), Home(), Discover()],
       ),
-    );
+    ));
   }
 }

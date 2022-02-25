@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:pour_ice/addpost.dart';
 import 'package:pour_ice/cardscreen.dart';
 
 class Home extends StatefulWidget {
@@ -17,7 +18,10 @@ class _HomeState extends State<Home> {
     return Scaffold(
       
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>AddPost()));
+        },
         child: Text(("Post")),
       ),
       body: Padding(

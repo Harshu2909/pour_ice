@@ -17,6 +17,11 @@ class Reg extends StatefulWidget {
 }
 
 class _RegState extends State<Reg> {
+ 
+ var email="";
+ var password="";
+ var confirmpassword="";
+ //for password hidden/shown
   bool isHiddenpwd = true;
   bool isHiddenpwdd = true;
 
@@ -36,23 +41,19 @@ class _RegState extends State<Reg> {
   final dobEditingController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {  
     //First name field
     final firstNameField = TextFormField(
         autofocus: false,
         controller: firstNameEditingController,
         keyboardType: TextInputType.text,
         //validator
-        // validator: (value) {
-        //   RegExp regex = RegExp(r'^.{3,}$');
-        //   if (value!.isEmpty) {
-        //     return (" First Name can not be empty");
-        //   }
-        //   if (!regex.hasMatch(value)) {
-        //     return ("Please Enter Name (Min 3 Character) ");
-        //   }
-        //   return null;
-        // },
+        validator: (value){
+          if(value==null || value.isEmpty){
+            return "Please enter First name";
+          }
+          return null;
+        },
 
         onSaved: (value) {
           firstNameEditingController.text = value!;
@@ -71,16 +72,12 @@ class _RegState extends State<Reg> {
         controller: secondNameEditingController,
         keyboardType: TextInputType.text,
         //validator
-        // validator: (value) {
-        //   RegExp regex = RegExp(r'^.{3,}$');
-        //   if (value!.isEmpty) {
-        //     return ("Second Name can not be empty");
-        //   }
-        //   if (!regex.hasMatch(value)) {
-        //     return ("Please Enter Name (Min 3 Character) ");
-        //   }
-        //   return null;
-        // },
+         validator: (value){
+          if(value==null || value.isEmpty){
+            return "Please enter Second name";
+          }
+          return null;
+        },
 
         onSaved: (value) {
           secondNameEditingController.text = value!;
@@ -99,15 +96,12 @@ class _RegState extends State<Reg> {
       controller: countryEditingController,
       keyboardType: TextInputType.text,
       //validator
-      // validator: (value) {
-      //   if (value!.isEmpty) {
-      //     return ("Please Enter your Email");
-      //   }
-      //   if (RegExp("A[a-zA-Z0-9+_.-1+@[a-zA-Z0-9.-1+. [a-z]").hasMatch(value)) {
-      //     return ("Please Enter a valid email");
-      //   }
-      //   return null;
-      // },
+       validator: (value){
+          if(value==null || value.isEmpty){
+            return "Please enter Country name";
+          }
+          return null;
+        },
 
       onSaved: (value) {
         countryEditingController.text = value!;
@@ -129,15 +123,12 @@ class _RegState extends State<Reg> {
       controller: emailEditingController,
       keyboardType: TextInputType.emailAddress,
       //validator
-      // validator: (value) {
-      //   if (value!.isEmpty) {
-      //     return ("Please Enter your Email");
-      //   }
-      //   if (RegExp("A[a-zA-Z0-9+_.-1+@[a-zA-Z0-9.-1+. [a-z]").hasMatch(value)) {
-      //     return ("Please Enter a valid email");
-      //   }
-      //   return null;
-      // },
+      validator: (value){
+          if(value==null || value.isEmpty){
+            return "Please enter Email";
+          }
+          return null;
+        },
 
       onSaved: (value) {
         emailEditingController.text = value!;
@@ -157,15 +148,12 @@ class _RegState extends State<Reg> {
         controller: passwordEditingController,
         obscureText: isHiddenpwd,
         //validator
-        // validator: (value) {
-        //   RegExp regex = RegExp(r'^.{6,}$');
-        //   if (value!.isEmpty) {
-        //     return ("password is required for login");
-        //   }
-        //   if (!regex.hasMatch(value)) {
-        //     return ("Please Enter valid password (Min 6 Character) ");
-        //   }
-        // },
+         validator: (value){
+          if(value==null || value.isEmpty){
+            return "Please enter Password";
+          }
+          return null;
+        },
 
         onSaved: (value) {
           passwordEditingController.text = value!;
@@ -188,12 +176,12 @@ class _RegState extends State<Reg> {
         controller: confirmPasswordEditingController,
         obscureText: isHiddenpwdd,
         //validator
-        // validator: (value) {
-        //   if (confirmPasswordEditingController.text.length !=
-        //       passwordEditingController.text) {
-        //     return ("Password don't match");
-        //   }
-        // },
+        validator: (value){
+          if(value==null || value.isEmpty){
+            return "Please enter Confirm password";
+          }
+          return null;
+        },
 
         onSaved: (value) {
           confirmPasswordEditingController.text = value!;
@@ -219,6 +207,12 @@ class _RegState extends State<Reg> {
         elevation: 7,
         color: HexColor("47532F"),
         onPressed: () {
+          if(_formkey.currentState!.validate()){
+          setState(() {
+            email=emailEditingController.text;
+            password=passwordEditingController.text;
+            confirmpassword=confirmPasswordEditingController.text;
+          });}
           signUp(emailEditingController.text, passwordEditingController.text);
         },
         child: Text(
@@ -447,6 +441,7 @@ class _RegState extends State<Reg> {
   // }
 
   void signUp(String email, String password) async {
+    
     await _auth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) => {
@@ -455,6 +450,8 @@ class _RegState extends State<Reg> {
         .catchError((e) {
       Fluttertoast.showToast(msg: e!.message);
     });
+    
+    
   }
 
   postDetailsToFirestore() async {

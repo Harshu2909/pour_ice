@@ -1,5 +1,6 @@
 // import 'dart:html';
 
+
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:pour_ice/forgotpassword.dart';
 import 'package:pour_ice/registration.dart';
 import 'package:flutter/gestures.dart';
 
@@ -20,6 +22,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  var email="";
+  var password="";
   //form key
   final _formKey = GlobalKey<FormState>();
 
@@ -106,6 +111,10 @@ class _LoginState extends State<Login> {
         elevation: 7,
         color: HexColor("47532F"),
         onPressed: () {
+          if(_formKey.currentState!.validate()){setState(() {
+            email=emailController.text;
+            password=passwordController.text;
+          });}
           
          signIn(emailController.text, passwordController.text);
         },
@@ -160,9 +169,15 @@ class _LoginState extends State<Login> {
                         //   keyboardType: TextInputType.text,
                         //   obscureText: true,
                         // ),
-                        SizedBox(height: 10),
-                        Text("Forget password ?"),
-                        SizedBox(height: 40),
+                        SizedBox(height: 2),
+                        TextButton(onPressed: (){
+                         Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: ((context) => ForgotPassword())));
+                        }, child: Text("Forget password ?", style: TextStyle(
+                          fontWeight: FontWeight.bold, color: HexColor("47532F")),)),
+                        // Text("Forget password ?"),
+                        SizedBox(height: 20),
                         loginButton,
 
                         // Container(

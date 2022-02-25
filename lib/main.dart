@@ -15,7 +15,9 @@ await Firebase.initializeApp();
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     
-    theme: ThemeData(primaryColor: HexColor("98B742"),accentColor: HexColor("98B742")),
+    theme: ThemeData(
+      primarySwatch: Colors.green,
+      primaryColor: HexColor("98B742"),accentColor: HexColor("98B742")),
     
      
     initialRoute: '/',
