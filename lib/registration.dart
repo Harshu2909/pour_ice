@@ -18,9 +18,6 @@ class Reg extends StatefulWidget {
 
 class _RegState extends State<Reg> {
  
- var email="";
- var password="";
- var confirmpassword="";
  //for password hidden/shown
   bool isHiddenpwd = true;
   bool isHiddenpwdd = true;
@@ -207,13 +204,7 @@ class _RegState extends State<Reg> {
         elevation: 7,
         color: HexColor("47532F"),
         onPressed: () {
-          if(_formkey.currentState!.validate()){
-          setState(() {
-            email=emailEditingController.text;
-            password=passwordEditingController.text;
-            confirmpassword=confirmPasswordEditingController.text;
-          });}
-          signUp(emailEditingController.text, passwordEditingController.text);
+           signUp(emailEditingController.text, passwordEditingController.text);
         },
         child: Text(
           "Sign Up",

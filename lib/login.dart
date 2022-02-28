@@ -23,8 +23,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
 
-  var email="";
-  var password="";
   //form key
   final _formKey = GlobalKey<FormState>();
 
@@ -111,12 +109,7 @@ class _LoginState extends State<Login> {
         elevation: 7,
         color: HexColor("47532F"),
         onPressed: () {
-          if(_formKey.currentState!.validate()){setState(() {
-            email=emailController.text;
-            password=passwordController.text;
-          });}
-          
-         signIn(emailController.text, passwordController.text);
+          signIn(emailController.text, passwordController.text);
         },
         child: Text(
           "Login",

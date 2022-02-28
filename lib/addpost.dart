@@ -22,6 +22,7 @@ class _AddPostState extends State<AddPost> {
       },
       child: Scaffold(
         appBar: AppBar(
+          
           centerTitle: true,
           title: Text("Add Post"),
         ),
