@@ -1,6 +1,5 @@
 // import 'dart:html';
 
-
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +21,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  var email = "";
+  var password = "";
 
   //form key
   final _formKey = GlobalKey<FormState>();
@@ -30,13 +31,19 @@ class _LoginState extends State<Login> {
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   //firebase auth
   final _auth = FirebaseAuth.instance;
 
   //hidden pwd
-  bool isHiddenpwd=true;
-  
-
+  bool isHiddenpwd = true;
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +57,7 @@ class _LoginState extends State<Login> {
         if (value!.isEmpty) {
           return ("Please Enter your Email");
         }
-        if (RegExp("A[a-zA-Z0-9+_.-1+@[a-zA-Z0-9.-1+. [a-z]")
-            .hasMatch(value)) {
+        if (RegExp("A[a-zA-Z0-9+_.-1+@[a-zA-Z0-9.-1+. [a-z]").hasMatch(value)) {
           return ("Please Enter a valid email");
         }
         return null;
@@ -70,7 +76,6 @@ class _LoginState extends State<Login> {
 
     //password field
     final passwordField = TextFormField(
-
       obscureText: isHiddenpwd,
       autofocus: false,
       controller: passwordController,
@@ -92,13 +97,13 @@ class _LoginState extends State<Login> {
         hintText: "password",
         hintStyle: TextStyle(color: HexColor("98B742"), fontSize: 12),
         prefixIcon: Icon(Icons.lock_outline),
-        suffixIcon: InkWell(onTap: _togglepwd,
-        child: Icon(Icons.visibility_off),),
+        suffixIcon: InkWell(
+          onTap: _togglepwd,
+          child: Icon(Icons.visibility_off),
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
-
-    
 
     //login button
     final loginButton = Material(
@@ -109,7 +114,12 @@ class _LoginState extends State<Login> {
         elevation: 7,
         color: HexColor("47532F"),
         onPressed: () {
-          signIn(emailController.text, passwordController.text);
+          // signIn(emailController.text, passwordController.text);
+
+          if (_formKey.currentState!.validate()) {
+            signIn(emailController.text.replaceAll(' ', ''), passwordController.text);
+            // Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(( context) => Homescreen())));
+          }
         },
         child: Text(
           "Login",
@@ -122,7 +132,6 @@ class _LoginState extends State<Login> {
     );
 
     return Scaffold(
-
       // backgroundColor: HexColor("E5E5E5"),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -163,12 +172,19 @@ class _LoginState extends State<Login> {
                         //   obscureText: true,
                         // ),
                         SizedBox(height: 2),
-                        TextButton(onPressed: (){
-                         Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: ((context) => ForgotPassword())));
-                        }, child: Text("Forget password ?", style: TextStyle(
-                          fontWeight: FontWeight.bold, color: HexColor("47532F")),)),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: ((context) =>
+                                          ForgotPassword())));
+                            },
+                            child: Text(
+                              "Forget password ?",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("47532F")),
+                            )),
                         // Text("Forget password ?"),
                         SizedBox(height: 20),
                         loginButton,
@@ -249,24 +265,75 @@ class _LoginState extends State<Login> {
     );
   }
 
-  //login function
-  void signIn(String email, String password) async {
-    if (_formKey.currentState!.validate()) {
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((uid) => {
-                Fluttertoast.showToast(msg: "Login Sucessful"),
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => HomeFeed())),
-              }).catchError((e){
-                  Fluttertoast.showToast(msg: e!.message);
-              });
-    }
-  }
 
-  void _togglepwd(){
+  //login function
+
+  // void signIn(String email, String password) async {
+  //   if (_formKey.currentState!.validate()) {
+  //     await _auth
+  //         .signInWithEmailAndPassword(email: email, password: password)
+  //         .then((uid) => {
+  //               Fluttertoast.showToast(msg: "Login Sucessful"),
+  //               Navigator.of(context).pushReplacement(
+  //                   MaterialPageRoute(builder: (context) => HomeFeed())),
+  //             })
+  //         .catchError((e) {
+  //       Fluttertoast.showToast(msg: e!.message);
+  //     });
+  //   }
+  // }
+
+  void signIn(String email, String password) async {
+  if (_formKey.currentState!.validate()) {
+
+
+    await _auth
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((uid) => {
+          if(uid.user?.emailVerified == true){
+            ScaffoldMessenger.of (context).showSnackBar(
+              SnackBar(
+                backgroundColor: Color(0xFF98B742),
+                content: Text(
+                  'Login Sucessful',
+                  style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white),
+                ), // Text
+              ),
+            ),
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: ((context) => HomeFeed()))),
+          }else{
+        ScaffoldMessenger.of (context).showSnackBar(
+       SnackBar(
+        backgroundColor: Color(0xFF0F2851),
+        content: Text(
+          'Please, verify your email',
+          style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white),
+        ), // Text
+      ),
+    ),
+          }
+
+        }).catchError((e)
+        {
+          ScaffoldMessenger.of (context).showSnackBar(
+            SnackBar(
+              backgroundColor: Color(0xFF0F2851),
+              content: Text(
+                'This User have No Record Found  Please SignUp!',
+                style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white),
+              ), // Text
+            ),
+          );
+
+        });
+
+  }
+}
+
+  void _togglepwd() {
     setState(() {
-      isHiddenpwd=!isHiddenpwd;
+      isHiddenpwd = !isHiddenpwd;
     });
   }
 }

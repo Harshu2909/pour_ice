@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pour_ice/discover.dart';
 import 'package:pour_ice/home.dart';
+import 'package:pour_ice/login.dart';
 import 'package:pour_ice/profile.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:pour_ice/setting.dart';
@@ -56,11 +57,16 @@ class _HomeFeedState extends State<HomeFeed>
               ),
             ),
             FlatButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () {
+                final shouldPop =  Navigator.pushReplacement(
+                    context, (MaterialPageRoute(builder: ((context) => Login()))));
+      },
               child: Text(
                 'Yes',
                 style: TextStyle(fontFamily:"Gilmer Medium",fontSize: 15, color: Color(0xFF3F4553)),
+
               ),
+
             ),
           ],
         ),

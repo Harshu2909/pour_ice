@@ -17,8 +17,14 @@ class Reg extends StatefulWidget {
 }
 
 class _RegState extends State<Reg> {
- 
- //for password hidden/shown
+  var firstName = "";
+  var secondName = "";
+  var countryName = "";
+  var email = "";
+  var pwd = "";
+  var cpwd = "";
+
+  //for password hidden/shown
   bool isHiddenpwd = true;
   bool isHiddenpwdd = true;
 
@@ -33,25 +39,66 @@ class _RegState extends State<Reg> {
   final emailEditingController = TextEditingController();
   final passwordEditingController = TextEditingController();
   final confirmPasswordEditingController = TextEditingController();
-
   final countryEditingController = TextEditingController();
-  final dobEditingController = TextEditingController();
+  
+
+  User? user;
+  int count = 1;
+  final currentUser = FirebaseAuth.instance.currentUser;
+
+  verifyEmail() async {
+    print('checking signed ${!user!.emailVerified}');
+    print('count is $count');
+    print('user $user');
+    if (user != null && !user!.emailVerified) {
+      print('again checking');
+      //await FirebaseAuth.instance.currentUser.sendEmailVerification();
+      await user!.sendEmailVerification();
+      print('Verification Email has been sent');
+      setState(() {
+        count = 0;
+      });
+      await ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Color(0xFF98B742),
+          content: Text(
+            'Verification Email has been sent Check your Mail and SignIn',
+            style: TextStyle(
+                fontSize: 14.0,
+                fontFamily: "Gilmer Medium",
+                color: Colors.white),
+          ),
+        ),
+      );
+    }
+    return "message";
+  }
 
   @override
-  Widget build(BuildContext context) {  
+  void dispose() {
+    firstNameEditingController.dispose();
+    secondNameEditingController.dispose();
+    emailEditingController.dispose();
+    countryEditingController.dispose();
+    passwordEditingController.dispose();
+    confirmPasswordEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     //First name field
     final firstNameField = TextFormField(
         autofocus: false,
         controller: firstNameEditingController,
         keyboardType: TextInputType.text,
         //validator
-        validator: (value){
-          if(value==null || value.isEmpty){
-            return "Please enter First name";
-          }
-          return null;
-        },
-
+        // validator: (value) {
+        //   if (value == null || value.isEmpty) {
+        //     return "Please enter First name";
+        //   }
+        //   return null;
+        // },
         onSaved: (value) {
           firstNameEditingController.text = value!;
         },
@@ -69,13 +116,12 @@ class _RegState extends State<Reg> {
         controller: secondNameEditingController,
         keyboardType: TextInputType.text,
         //validator
-         validator: (value){
-          if(value==null || value.isEmpty){
-            return "Please enter Second name";
-          }
-          return null;
-        },
-
+        // validator: (value) {
+        //   if (value == null || value.isEmpty) {
+        //     return "Please enter Second name";
+        //   }
+        //   return null;
+        // },
         onSaved: (value) {
           secondNameEditingController.text = value!;
         },
@@ -93,12 +139,12 @@ class _RegState extends State<Reg> {
       controller: countryEditingController,
       keyboardType: TextInputType.text,
       //validator
-       validator: (value){
-          if(value==null || value.isEmpty){
-            return "Please enter Country name";
-          }
-          return null;
-        },
+      // validator: (value) {
+      //   if (value == null || value.isEmpty) {
+      //     return "Please enter Country name";
+      //   }
+      //   return null;
+      // },
 
       onSaved: (value) {
         countryEditingController.text = value!;
@@ -120,12 +166,12 @@ class _RegState extends State<Reg> {
       controller: emailEditingController,
       keyboardType: TextInputType.emailAddress,
       //validator
-      validator: (value){
-          if(value==null || value.isEmpty){
-            return "Please enter Email";
-          }
-          return null;
-        },
+      // validator: (value) {
+      //   if (value == null || value.isEmpty) {
+      //     return "Please enter Email";
+      //   }
+      //   return null;
+      // },
 
       onSaved: (value) {
         emailEditingController.text = value!;
@@ -145,13 +191,12 @@ class _RegState extends State<Reg> {
         controller: passwordEditingController,
         obscureText: isHiddenpwd,
         //validator
-         validator: (value){
-          if(value==null || value.isEmpty){
-            return "Please enter Password";
-          }
-          return null;
-        },
-
+        // validator: (value) {
+        //   if (value == null || value.isEmpty) {
+        //     return "Please enter Password";
+        //   }
+        //   return null;
+        // },
         onSaved: (value) {
           passwordEditingController.text = value!;
         },
@@ -173,13 +218,12 @@ class _RegState extends State<Reg> {
         controller: confirmPasswordEditingController,
         obscureText: isHiddenpwdd,
         //validator
-        validator: (value){
-          if(value==null || value.isEmpty){
-            return "Please enter Confirm password";
-          }
-          return null;
-        },
-
+        // validator: (value) {
+        //   if (value == null || value.isEmpty) {
+        //     return "Please enter Confirm password";
+        //   }
+        //   return null;
+        // },
         onSaved: (value) {
           confirmPasswordEditingController.text = value!;
         },
@@ -203,8 +247,24 @@ class _RegState extends State<Reg> {
         minWidth: MediaQuery.of(context).size.width,
         elevation: 7,
         color: HexColor("47532F"),
-        onPressed: () {
-           signUp(emailEditingController.text, passwordEditingController.text);
+        onPressed: () async {
+          //  signUp(emailEditingController.text, passwordEditingController.text);
+          if (_formkey.currentState!.validate()) {
+            setState(() {
+              signUp(
+                  emailEditingController.text.replaceAll(' ', ''), passwordEditingController.text);
+            });
+
+            user = await FirebaseAuth.instance.currentUser;
+            setState(() {});
+
+            print('before');
+            await verifyEmail();
+            print('after');
+
+            await Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: ((context) => Login())));
+          }
         },
         child: Text(
           "Sign Up",
@@ -251,165 +311,166 @@ class _RegState extends State<Reg> {
               Padding(
                 padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
                 child: Form(
+                    key: _formkey,
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    firstNameField,
-                    SizedBox(
-                      height: 10,
-                    ),
-                    secondNameField,
-                    SizedBox(
-                      height: 10,
-                    ),
-                    countryField,
-                    SizedBox(
-                      height: 10,
-                    ),
-                    emailFiel,
-                    SizedBox(
-                      height: 10,
-                    ),
-                    passwordField,
-                    SizedBox(
-                      height: 10,
-                    ),
-                    confirmpasswordField,
-                    SizedBox(
-                      height: 10,
-                    ),
-                    signupButton,
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    // TextFormField(
-                    //   decoration: InputDecoration(
-                    //       hintText: "Full Name",
-
-                    //       hintStyle: TextStyle(color: HexColor("98B742"),
-                    //       fontSize: 12),
-                    //       icon: Icon(Icons.account_circle)),
-                    //   keyboardType: TextInputType.emailAddress,
-                    // ),
-                    // TextFormField(
-                    //   decoration: InputDecoration(
-                    //       hintText: "Date Of Birth",
-                    //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
-                    //       icon: Icon(Icons.calendar_today_outlined)),
-                    //   keyboardType: TextInputType.emailAddress,
-                    // ),
-                    // TextFormField(
-                    //   decoration: InputDecoration(
-                    //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
-                    //       hintText: "Email@example.com",
-                    //       icon: Icon(Icons.mail)),
-                    //   keyboardType: TextInputType.emailAddress,
-                    // ),
-                    // Container(
-                    //   width: 500,
-                    //   child: DropdownButton<String>(
-                    //     // icon: Icon(Icons.flag),
-                    //     hint: Text(
-                    //       "Country",
-                    //       style: TextStyle(color: HexColor("98B742"),fontSize: 12),
-                    //     ),
-
-                    //     items: <String>[
-                    //       'India',
-                    //       'Usa',
-                    //       'Canada',
-                    //       'Turkey',
-                    //       'Pakistan'
-                    //     ].map((String value) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: value,
-                    //         child: Text(value),
-                    //       );
-                    //     }).toList(),
-                    //     onChanged: (_) {},
-                    //   ),
-                    // ),
-                    // Container(
-                    //   width: 500,
-                    //   child: DropdownButton<String>(
-                    //     // icon: Icon(Icons.male),
-                    //     hint: Text("Gender",
-                    //         style: TextStyle(
-                    //             color: HexColor("98B742"), fontSize: 12)),
-                    //     items: <String>[
-                    //       'Male',
-                    //       'Female',
-                    //       'Other',
-                    //     ].map((String value) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: value,
-                    //         child: Text(value),
-                    //       );
-                    //     }).toList(),
-                    //     onChanged: (_) {},
-                    //   ),
-                    // ),
-                    // TextFormField(
-                    //   decoration: InputDecoration(
-                    //       hintText: "Enter Password",
-                    //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
-                    //       icon: Icon(Icons.lock_outline)),
-                    //   keyboardType: TextInputType.emailAddress,
-                    // ),
-                    // TextFormField(
-                    //   decoration: InputDecoration(
-                    //       hintText: "Re-enter password",
-                    //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
-                    //       icon: Icon(Icons.lock_outline)),
-                    //   keyboardType: TextInputType.emailAddress,
-                    // ),
-                    // SizedBox(
-                    //   height: 10,
-                    // ),
-                    // Container(
-                    //   width: 500,
-                    //   child: RaisedButton(
-                    //     hoverColor: HexColor("98B742"),
-                    //     color: HexColor("47532F"),
-                    //     onPressed: () {
-                    //       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => HomeFeed())));
-                    //     },
-                    //     child: Text(
-                    //       "Register",
-                    //       style: TextStyle(
-                    //           color: Colors.white, fontWeight: FontWeight.bold),
-                    //     ),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(7.0),
-                    //     ),
-                    //   ),
-                    // ),
-                    SizedBox(height: 7),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("Already Have An Account ? "),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: ((context) => Login())));
-                          },
-                          child: Text(
-                            "Login Now",
-                            style: TextStyle(
-                              color: HexColor("47532F"),
-                              fontWeight: FontWeight.bold,
-                              // decoration: TextDecoration.underline
-                            ),
-                          ),
-                        )
+                        firstNameField,
+                        SizedBox(
+                          height: 10,
+                        ),
+                        secondNameField,
+                        SizedBox(
+                          height: 10,
+                        ),
+                        countryField,
+                        SizedBox(
+                          height: 10,
+                        ),
+                        emailFiel,
+                        SizedBox(
+                          height: 10,
+                        ),
+                        passwordField,
+                        SizedBox(
+                          height: 10,
+                        ),
+                        confirmpasswordField,
+                        SizedBox(
+                          height: 10,
+                        ),
+                        signupButton,
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        // TextFormField(
+                        //   decoration: InputDecoration(
+                        //       hintText: "Full Name",
+
+                        //       hintStyle: TextStyle(color: HexColor("98B742"),
+                        //       fontSize: 12),
+                        //       icon: Icon(Icons.account_circle)),
+                        //   keyboardType: TextInputType.emailAddress,
+                        // ),
+                        // TextFormField(
+                        //   decoration: InputDecoration(
+                        //       hintText: "Date Of Birth",
+                        //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
+                        //       icon: Icon(Icons.calendar_today_outlined)),
+                        //   keyboardType: TextInputType.emailAddress,
+                        // ),
+                        // TextFormField(
+                        //   decoration: InputDecoration(
+                        //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
+                        //       hintText: "Email@example.com",
+                        //       icon: Icon(Icons.mail)),
+                        //   keyboardType: TextInputType.emailAddress,
+                        // ),
+                        // Container(
+                        //   width: 500,
+                        //   child: DropdownButton<String>(
+                        //     // icon: Icon(Icons.flag),
+                        //     hint: Text(
+                        //       "Country",
+                        //       style: TextStyle(color: HexColor("98B742"),fontSize: 12),
+                        //     ),
+
+                        //     items: <String>[
+                        //       'India',
+                        //       'Usa',
+                        //       'Canada',
+                        //       'Turkey',
+                        //       'Pakistan'
+                        //     ].map((String value) {
+                        //       return DropdownMenuItem<String>(
+                        //         value: value,
+                        //         child: Text(value),
+                        //       );
+                        //     }).toList(),
+                        //     onChanged: (_) {},
+                        //   ),
+                        // ),
+                        // Container(
+                        //   width: 500,
+                        //   child: DropdownButton<String>(
+                        //     // icon: Icon(Icons.male),
+                        //     hint: Text("Gender",
+                        //         style: TextStyle(
+                        //             color: HexColor("98B742"), fontSize: 12)),
+                        //     items: <String>[
+                        //       'Male',
+                        //       'Female',
+                        //       'Other',
+                        //     ].map((String value) {
+                        //       return DropdownMenuItem<String>(
+                        //         value: value,
+                        //         child: Text(value),
+                        //       );
+                        //     }).toList(),
+                        //     onChanged: (_) {},
+                        //   ),
+                        // ),
+                        // TextFormField(
+                        //   decoration: InputDecoration(
+                        //       hintText: "Enter Password",
+                        //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
+                        //       icon: Icon(Icons.lock_outline)),
+                        //   keyboardType: TextInputType.emailAddress,
+                        // ),
+                        // TextFormField(
+                        //   decoration: InputDecoration(
+                        //       hintText: "Re-enter password",
+                        //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
+                        //       icon: Icon(Icons.lock_outline)),
+                        //   keyboardType: TextInputType.emailAddress,
+                        // ),
+                        // SizedBox(
+                        //   height: 10,
+                        // ),
+                        // Container(
+                        //   width: 500,
+                        //   child: RaisedButton(
+                        //     hoverColor: HexColor("98B742"),
+                        //     color: HexColor("47532F"),
+                        //     onPressed: () {
+                        //       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: ((context) => HomeFeed())));
+                        //     },
+                        //     child: Text(
+                        //       "Register",
+                        //       style: TextStyle(
+                        //           color: Colors.white, fontWeight: FontWeight.bold),
+                        //     ),
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(7.0),
+                        //     ),
+                        //   ),
+                        // ),
+                        SizedBox(height: 7),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Already Have An Account ? "),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: ((context) => Login())));
+                              },
+                              child: Text(
+                                "Login Now",
+                                style: TextStyle(
+                                  color: HexColor("47532F"),
+                                  fontWeight: FontWeight.bold,
+                                  // decoration: TextDecoration.underline
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 7)
                       ],
-                    ),
-                    SizedBox(height: 7)
-                  ],
-                )),
+                    )),
               )
             ],
           ),
@@ -432,17 +493,24 @@ class _RegState extends State<Reg> {
   // }
 
   void signUp(String email, String password) async {
-    
-    await _auth
-        .createUserWithEmailAndPassword(email: email, password: password)
-        .then((value) => {
-              postDetailsToFirestore(),
-            })
-        .catchError((e) {
-      Fluttertoast.showToast(msg: e!.message);
-    });
-    
-    
+    if (_formkey.currentState!.validate()) ;
+    {
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) => {postDetailsToFirestore()})
+          .catchError((e) {
+        // Fluttertoast.showToast(msg: e!.message);
+      });
+    }
+
+    // await _auth
+    //     .createUserWithEmailAndPassword(email: email, password: password)
+    //     .then((value) => {
+    //           postDetailsToFirestore(),
+    //         })
+    //     .catchError((e) {
+    //   Fluttertoast.showToast(msg: e!.message);
+    // });
   }
 
   postDetailsToFirestore() async {
@@ -451,6 +519,7 @@ class _RegState extends State<Reg> {
     // sedning these values
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
+
     UserModel userModel = UserModel();
 
     //writing all value
@@ -463,10 +532,10 @@ class _RegState extends State<Reg> {
         .collection("users")
         .doc(user.uid)
         .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account created successfully  ");
-
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (context) => HomeFeed()), (route) => false);
+    // Fluttertoast.showToast(msg: "Account created successfully  ");
+    //
+    // Navigator.pushAndRemoveUntil(context,
+    //     MaterialPageRoute(builder: (context) => HomeFeed()), (route) => false);
   }
 
   void _togglepwd() {
@@ -475,7 +544,7 @@ class _RegState extends State<Reg> {
     });
   }
 
-    void _togglepwdd() {
+  void _togglepwdd() {
     setState(() {
       isHiddenpwdd = !isHiddenpwdd;
     });
