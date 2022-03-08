@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:pour_ice/forgotpassword.dart';
 import 'package:pour_ice/registration.dart';
@@ -114,10 +115,10 @@ class _LoginState extends State<Login> {
         elevation: 7,
         color: HexColor("47532F"),
         onPressed: () {
-          // signIn(emailController.text, passwordController.text);
-
+          // signIn(emailController.text, passwordController.text)
           if (_formKey.currentState!.validate()) {
-            signIn(emailController.text.replaceAll(' ', ''), passwordController.text);
+            signIn(emailController.text.replaceAll(' ', ''),
+                passwordController.text);
             // Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(( context) => Homescreen())));
           }
         },
@@ -155,23 +156,7 @@ class _LoginState extends State<Login> {
                           height: 10,
                         ),
                         passwordField,
-                        // TextFormField(
-                        //   decoration: InputDecoration(
-                        //       hintText: "Email@example.com",
-                        //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
-                        //       icon: Icon(Icons.mail)),
-                        //   keyboardType: TextInputType.emailAddress,
-                        // ),
 
-                        // TextFormField(
-                        //   decoration: InputDecoration(
-                        //       hintText: "***********",
-                        //       hintStyle: TextStyle(color: HexColor("98B742"),fontSize: 12),
-                        //       icon: Icon(Icons.lock_outline)),
-                        //   keyboardType: TextInputType.text,
-                        //   obscureText: true,
-                        // ),
-                        SizedBox(height: 2),
                         TextButton(
                             onPressed: () {
                               Navigator.of(context).pushReplacement(
@@ -185,27 +170,30 @@ class _LoginState extends State<Login> {
                                   fontWeight: FontWeight.bold,
                                   color: HexColor("47532F")),
                             )),
-                        // Text("Forget password ?"),
-                        SizedBox(height: 20),
+
+                        SizedBox(height: 0),
+
                         loginButton,
 
-                        // Container(
-                        //   width: 500,
-                        //   child: RaisedButton(
-                        //     hoverColor: HexColor("98B742"),
-                        //     color: HexColor("47532F"),
-                        //     onPressed: () {},
-                        //     child: Text(
-                        //       "Login",
-                        //       style: TextStyle(
-                        //           color: Colors.white,
-                        //           fontWeight: FontWeight.bold),
-                        //     ),
-                        //     shape: RoundedRectangleBorder(
-                        //       borderRadius: BorderRadius.circular(7.0),
-                        //     ),
-                        //   ),
-                        // ),
+                        SizedBox(
+                          height: 20,
+                        ),
+
+                        Text("Or"),
+
+                        SizedBox(height: 5,),
+
+                       ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 255, 255, 255),
+                            onPrimary: Colors.black,
+                            minimumSize: Size(double.infinity, 45),
+                          ),
+                          icon: FaIcon(FontAwesomeIcons.google, color: Colors.red,),
+                          label: Text('Signin with Google'),
+                          onPressed: () {},
+                        ),
+
                         SizedBox(
                           height: 30,
                         ),
@@ -230,29 +218,6 @@ class _LoginState extends State<Login> {
                             )
                           ],
                         )
-
-                        // ElevatedButton(
-                        //     child: Text("Login",
-                        //         style: TextStyle(fontSize: 14)),
-                        //     style: ButtonStyle(
-                        //         foregroundColor:
-                        //             MaterialStateProperty.all<Color>(Colors.white),
-                        //         backgroundColor:
-                        //             MaterialStateProperty.all<Color>(Colors.redAccent),
-                        //         shape: MaterialStateProperty.all<
-                        //                 RoundedRectangleBorder>(
-                        //             RoundedRectangleBorder(
-                        //                 borderRadius: BorderRadius.circular(5),
-                        //                 side: BorderSide(color: Colors.red)))),
-                        //     onPressed: () => null)
-
-                        // ElevatedButton(onPressed: (){}, child: Text("Login",style: TextStyle(fontSize: 14)),),
-
-                        // RaisedButton(
-
-                        //   color: HexColor("47532F"),
-                        //   onPressed: (){},
-                        // child: Text("Login",style: TextStyle(color: Colors.white),),),
                       ],
                     ),
                   ),
@@ -265,71 +230,60 @@ class _LoginState extends State<Login> {
     );
   }
 
-
-  //login function
-
-  // void signIn(String email, String password) async {
-  //   if (_formKey.currentState!.validate()) {
-  //     await _auth
-  //         .signInWithEmailAndPassword(email: email, password: password)
-  //         .then((uid) => {
-  //               Fluttertoast.showToast(msg: "Login Sucessful"),
-  //               Navigator.of(context).pushReplacement(
-  //                   MaterialPageRoute(builder: (context) => HomeFeed())),
-  //             })
-  //         .catchError((e) {
-  //       Fluttertoast.showToast(msg: e!.message);
-  //     });
-  //   }
-  // }
-
   void signIn(String email, String password) async {
-  if (_formKey.currentState!.validate()) {
-
-
-    await _auth
-        .signInWithEmailAndPassword(email: email, password: password)
-        .then((uid) => {
-          if(uid.user?.emailVerified == true){
-            ScaffoldMessenger.of (context).showSnackBar(
-              SnackBar(
-                backgroundColor: Color(0xFF98B742),
-                content: Text(
-                  'Login Sucessful',
-                  style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white),
-                ), // Text
-              ),
-            ),
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: ((context) => HomeFeed()))),
-          }else{
-        ScaffoldMessenger.of (context).showSnackBar(
-       SnackBar(
-        backgroundColor: Color(0xFF0F2851),
-        content: Text(
-          'Please, verify your email',
-          style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white),
-        ), // Text
-      ),
-    ),
-          }
-
-        }).catchError((e)
-        {
-          ScaffoldMessenger.of (context).showSnackBar(
-            SnackBar(
-              backgroundColor: Color(0xFF0F2851),
-              content: Text(
-                'This User have No Record Found  Please SignUp!',
-                style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white),
-              ), // Text
-            ),
-          );
-
-        });
-
+    if (_formKey.currentState!.validate()) {
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((uid) => {
+                if (uid.user?.emailVerified == true)
+                  {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Color(0xFF98B742),
+                        content: Text(
+                          'Login Sucessful',
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontFamily: "Gilmer Medium",
+                              color: Colors.white),
+                        ), // Text
+                      ),
+                    ),
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: ((context) => HomeFeed()))),
+                  }
+                else
+                  {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Color(0xFF0F2851),
+                        content: Text(
+                          'Please, verify your email',
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontFamily: "Gilmer Medium",
+                              color: Colors.white),
+                        ), // Text
+                      ),
+                    ),
+                  }
+              })
+          .catchError((e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Color(0xFF0F2851),
+            content: Text(
+              'This User have No Record Found  Please SignUp!',
+              style: TextStyle(
+                  fontSize: 18.0,
+                  fontFamily: "Gilmer Medium",
+                  color: Colors.white),
+            ), // Text
+          ),
+        );
+      });
+    }
   }
-}
 
   void _togglepwd() {
     setState(() {

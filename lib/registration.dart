@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/gestures.dart';
 import 'package:pour_ice/homefeed.dart';
@@ -447,6 +448,41 @@ class _RegState extends State<Reg> {
                         //   ),
                         // ),
                         SizedBox(height: 7),
+
+                    Text("Or Signup with"),
+
+                    SizedBox(height: 5,),
+                    ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 255, 255, 255),
+                            onPrimary: Colors.black,
+                            minimumSize: Size(double.infinity, 45),
+                          ),
+                          icon: FaIcon(FontAwesomeIcons.google, color: Colors.red,),
+                          label: Text('Sign Up with Google'),
+                          onPressed: () {},
+                        ), // ElevatedButton.icon
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 255, 255, 255),
+                            onPrimary: Colors.black,
+                            minimumSize: Size(double.infinity, 45),
+                          ),
+                          icon: FaIcon(FontAwesomeIcons.facebook, color: Color.fromARGB(255, 24, 92, 240),),
+                          label: Text('Sign Up with Facebook'),
+                          onPressed: () {},
+                        ), // ElevatedButton.icon
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 255, 255, 255),
+                            onPrimary: Colors.black,
+                            minimumSize: Size(double.infinity, 45),
+                          ),
+                          icon: FaIcon(FontAwesomeIcons.twitter, color: Color.fromARGB(255, 96, 138, 228),),
+                          label: Text('Sign Up with Twitter'),
+                          onPressed: () {},
+                        ), 
+                        SizedBox(height: 7,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -25,6 +25,8 @@ class _AddPostState extends State<AddPost> {
           
           centerTitle: true,
           title: Text("Add Post"),
+
+
         ),
       ),
     );
